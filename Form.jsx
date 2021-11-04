@@ -1,18 +1,21 @@
 import React, {useState} from "react";
 
-export const Form = ({}) => {
+export const Form = ({sendMessages}) => {
   const[value, setValue] = useState('');
 
   const handleChange = (e) => {
     setValue(e.target.value);
-    console.log(value);
-  
+    
   }
-
 
 
 const handleSubmit = (e) => {
     e.preventDefault();
+    sendMessages({
+      text:value,
+      author:'human'
+    });
+    setValue('')
   
   }
 
@@ -21,7 +24,6 @@ const handleSubmit = (e) => {
     <form onSubmit={handleSubmit}>
       <input type="text" value={value} onChange={handleChange}/>
       <button>Отправить</button>
-      <p></p>
    </form>
      
   )
