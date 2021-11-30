@@ -1,28 +1,51 @@
 import React from "react";
-
 import Button from "react-bootstrap/Button";
-import { OverlayTrigger } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+import { FormControl, InputGroup } from "react-bootstrap";
+import { useState } from "react";
 
-const chatMessseng = [
-  { name: "chat1", id: "chat1" },
-  { name: "chat2", id: "chat2" },
-  { name: "chat3", id: "chat3" },
-];
+export const ChatMessages = ({ chatMessages, onAddChat }) => {
+  const [value, setValue] = useState("");
 
-export const ChatMessages = () => {
-  const Example = () => (
-    <OverlayTrigger trigger="click" placement="right">
-      <div className="d-grid gap-2">
-        {chatMessseng.map((chat) => (
-          <Link to={`/chats/${chat.id}`}>
-            {chat.name}
-            <Button variant="success">Send</Button>
-          </Link>
+  const handleChange = (e) => {
+    setValue(e.target.value);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onAddChat(value);
+
+    setValue("");
+  };
+
+  return (
+    <div className="d-grid gap-2">
+      <h3>List of chats</h3>
+      <ul>
+        {chatMessages.map((chat) => (
+          <>
+            <li>
+              <NavLink to={`/chats/${chat.id}`}>{chat.name}</NavLink>
+            </li>
+
+            <Button variant="warning" onClick={() => {}}>
+              delete
+            </Button>
+          </>
         ))}
-      </div>
-    </OverlayTrigger>
+      </ul>
+      <form onSubmit={handleSubmit}>
+        <InputGroup className="mb-3">
+          <FormControl
+            aria-describedby="basic-addon2"
+            value={value}
+            onChange={handleChange}
+          />
+          <Button variant="danger" id="button-addon2" size="lg">
+            Add chat
+          </Button>
+        </InputGroup>
+      </form>
+    </div>
   );
-
-  return <Example />;
 };

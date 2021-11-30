@@ -1,30 +1,33 @@
-
 import { Form } from "../Form";
 import { MessageList } from "../MessageList";
-import { useState, useEffect, useCallback } from "react";
 import { AUTHOR } from "../../utils/constants";
-
 import { ChatMessages } from "../ChatMessages";
+import { useCallback, useEffect, useState } from "react";
 import "./Chats.css";
+import {
+  Navigate,
+  useLocation,
+  useNavigate,
+  useParams,
+  useRoutes,
+} from "react-router";
 
-const userMessages = [
-  {
-    text: "text1",
-    author: AUTHOR.human
-  },
-];
-
-function Chats() {
-  const [messages, setMessages] = useState(userMessages);
-
-  const sendMessages = useCallback((newMessage) => {
-    setMessages((prevMessages) => [...prevMessages, newMessage]);
-  }, []);
+function Chats({ chatMessages, message, setMessage, onAddChat }) {
+  const { chatId } = useParams();
+  const sendMessages = useCallback(
+    (newMessage) => {
+      setMessage((prevMessages) => ({
+        ...prevMessages,
+        [chatId]: [...prevMessages[chatId], newMessage],
+      }));
+    },
+    [chatId]
+  );
 
   useEffect(() => {
     if (
-      messages.length &&
-      messages[messages.length - 1].author !== AUTHOR.bot
+      message[chatId]?.length &&
+      message[chatId]?.[message[chatId]?.length - 1].author !== AUTHOR.bot
     ) {
       const timer = setTimeout(
         () =>
@@ -37,14 +40,17 @@ function Chats() {
       );
       return () => clearTimeout(timer);
     }
-  }, [messages]);
+  }, [message]);
+  if (!message[chatId]) {
+    return <Navigate replace to="/chats" />;
+  }
 
   return (
     <div className="App">
       <div>
-        <MessageList messages={messages} />
+        <ChatMessages chatMessages={chatMessages} onAddChat={onAddChat} />
+        <MessageList message={message[chatId]} />
         <Form sendMessages={sendMessages} />
-        <ChatMessages />
       </div>
     </div>
   );

@@ -1,10 +1,10 @@
 import React from "react";
 
-export const MessageList = ({ messages }) => {
+export const MessageList = ({ message }) => {
   return (
     <div>
-      {messages.map((mes) => (
-        <div  key={mes.id}>
+      {message.map((mes) => (
+        <div key={mes.id}>
           <span>{mes.author}</span>: <span>{mes.text}</span>
         </div>
       ))}
